@@ -11,6 +11,8 @@ import calendar
 import dateutil.parser
 import pytz
 
+import os
+
 
 def load_cache() -> pd.DataFrame:
     """
@@ -33,6 +35,10 @@ def save_cache(data:pd.DataFrame, filename:str="cache/price_data.tsv"):
     # Load cache and merge with new data
     cache = load_cache()
     cache = pd.concat([cache, data]).drop_duplicates().sort_values("time").reset_index(drop=True)
+    # Create path if it does not exist
+    filepath = os.path.split(filename)[0]
+    if not os.path.exists(filepath):
+        os.makedirs(filepath)
     cache.to_csv(filename, sep="\t")
 
 
